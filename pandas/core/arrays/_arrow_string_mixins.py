@@ -209,7 +209,7 @@ class ArrowStringArrayMixin:
             return self._from_pyarrow_array(
                 pa.chunked_array(result, type=self._pa_array.type)
             )
-        return self._from_pyarrow_array(pc.utf8_zfill(self._pa_array, width))
+        return self._from_pyarrow_array(pc.utf8_zfill(self._pa_array, max(width, 0)))
 
     def _str_normalize(self, form: Literal["NFC", "NFD", "NFKC", "NFKD"]) -> Self:
         if form not in ("NFC", "NFD", "NFKC", "NFKD"):

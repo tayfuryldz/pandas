@@ -112,6 +112,7 @@ def test_string_array_extract(nullable_string_dtype):
         (["a", "ab", "abc", None], 4, ["000a", "00ab", "0abc", None]),
         (["1", "-1", "+1", None], 4, ["0001", "-001", "+001", None]),
         (["1234", "-1234"], 3, ["1234", "-1234"]),
+        (["1", "2", "03", None], -2, ["1", "2", "03", None]),
     ],
 )
 def test_string_array_zfill(nullable_string_dtype, values, width, expected):
