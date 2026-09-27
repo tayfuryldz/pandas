@@ -437,6 +437,19 @@ class DatetimeLikeArrayMixin(OpsMixin, NDArrayBackedExtensionArray):
                 cls = dtype.construct_array_type()
                 return cls._from_sequence(arr_object, dtype=dtype, copy=False)
             else:
+                if self.dtype.kind == "M":
+                    date_format = {
+                        "s": "%Y-%m-%d %H:%M:%S",
+                        "ms": "%Y-%m-%d %H:%M:%S.%f",
+                    }.get(self.unit)
+                    if date_format is not None:
+                        result = self._format_native_types(date_format=date_format)
+                        if self.unit == "ms":
+                            result = np.array(
+                                [x[:-3] if isinstance(x, str) and x != "NaT" else x for x in result],
+                                dtype=object,
+                            )
+                        return result
                 return self._format_native_types()
 
         elif isinstance(dtype, ExtensionDtype):

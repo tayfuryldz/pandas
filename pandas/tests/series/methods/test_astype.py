@@ -209,6 +209,19 @@ class TestAstype:
         expected = pd.Series(["2012-01-01", "2012-01-02", "2012-01-03"], dtype="str")
         tm.assert_series_equal(result, expected)
 
+    @pytest.mark.parametrize(
+        "unit, expected",
+        [
+            ("s", ["1970-01-01 00:00:01", "1970-01-01 00:00:02"]),
+            ("ms", ["1970-01-01 00:00:01.000", "1970-01-01 00:00:02.001"]),
+        ],
+    )
+    def test_astype_dt64_to_str_preserves_unit_precision(self, unit, expected):
+        ser = pd.Series([1000, 2001], dtype=f"datetime64[{unit}]")
+        result = ser.astype(str)
+        expected = pd.Series(expected, dtype="str")
+        tm.assert_series_equal(result, expected)
+
     def test_astype_dt64tz_to_str(self):
         # GH#10442 : testing astype(str) is correct for Series/DatetimeIndex
         dti_tz = pd.date_range("2012-01-01", periods=3, tz="US/Eastern")
